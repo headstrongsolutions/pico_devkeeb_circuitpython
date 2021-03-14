@@ -1,5 +1,7 @@
 # Devkeeb - a macro keyboard with display and rgb led's
 
+<img src="keeb_glory.png" style="width:50%" />
+
 It's called DevKeeb as I wanted a macro keyboard for common debug buttons (f5, sh+f5, f10, f11 etc).
 
 I want to use a Raspberry Pi Pico for this as the boards are extremely cheap, but extremely powerful and have a lot of pin. The 'bang-to-buck' makes it a no-brainer.
