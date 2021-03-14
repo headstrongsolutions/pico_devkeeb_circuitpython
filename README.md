@@ -7,9 +7,11 @@ I want to use a Raspberry Pi Pico for this as the boards are extremely cheap, bu
 I want it to have different 'layers' which mean knowing which keyboard button corresponds with which pressed key is a pain, so I'll backlight them with individual RGB LED's.
 
 I want the different layers to be selectable from buttons on the front face.
+
 I want a OLED LCD screen as a display on the front to display the currently selected keyboard layer.
 
 I started this as a collection of C projects to solve each individual problem and frankly I'll likely go back to that when I've polished the funcitonality, but I was having teething problems with understanding how to mix and match C and C++ projects into one project, so I switched to Python as I'm more comfortable with that.
+
 Micro Python at time of writing hasn't yet had an USB-HID implementation created for the RP2040 (the chip on a Raspberry Pi Pico), meaning at this time I can't use it as a keyboard (HID == Human Interface Device, so a keyboard, mouse etc).
 
 Adafruit's Circuit Python however does have a functioning HID library for the RP2040, so to get this moving I've switched to using that for this project.
