@@ -16,30 +16,55 @@ from boncekeeb.sprites import sprite_sheet
 display = ssd_1306s(board.GP2, board.GP3, 128, 64)
 
 # == spritesheets setup == #
-dev_sprite_names = [
-    ["Esc", Keycode.ESCAPE, 0],
-    ["Home", Keycode.HOME, 1],
-    ["Up", Keycode.UP_ARROW, 2],
-    ["Down", Keycode.DOWN_ARROW, 3],
-    ["Left", Keycode.LEFT_ARROW, 4],
-    ["Right", Keycode.RIGHT_ARROW, 5],
-    ["End", Keycode.END, 6],
-    ["Pg-Up", Keycode.PAGE_UP, 7],
-    ["F5", Keycode.F5, 8],
-    ["Sh-F5", [Keycode.SHIFT, Keycode.F5], 9],
-    ["F10", Keycode.F10, 10],
-    ["F11", Keycode.F11, 11],
-    ["F8", Keycode.F8, 11],
-    ["F12", Keycode.F12, 12],
-    ["Pg-Dn", Keycode.PAGE_DOWN, 15],
-    ["Sh-Del", [Keycode.SHIFT, Keycode.DELETE], 16],
-    ["Tilde", [Keycode.SHIFT, Keycode.GRAVE_ACCENT], 17],
-    ["Baktik", Keycode.GRAVE_ACCENT, 17]
+dev_sprite_details = [
+    ["Esc", Keycode.ESCAPE, 0xff0000, 0, 17],
+    ["Sh-Del", [Keycode.SHIFT, Keycode.DELETE], 0xff0000, 16, 16],
+    ["empty", None, 0x000000, 14, 9],
+    ["F5", Keycode.F5, 0x00ff6e, 8, 8],
+    ["Sh-F5", [Keycode.SHIFT, Keycode.F5], 0xff0000, 9, 1],
+
+    ["Home", Keycode.HOME, 0x6af011, 1, 18],
+    ["End", Keycode.END, 0xf782ff, 6, 15],
+    ["F9", Keycode.F9, 0xed1351, 12, 10],
+    ["F10", Keycode.F10, 0x00ccff, 10, 7],
+    ["F11", Keycode.F11, 0x4374b5, 11, 2],
+
+    ["Tilde", [Keycode.SHIFT, Keycode.GRAVE_ACCENT], 0x6af011, 17, 19],
+    ["Pg-Up", Keycode.PAGE_UP, 0xf782ff, 7, 14],
+    ["empty", None, 0x000000, 14, 11],
+    ["Up", Keycode.UP_ARROW, 0x00aaff, 2, 6],
+    ["empty", None, 0x000000, 14, 3],
+
+    ["F12", Keycode.F12, 0x00ccff, 13, 20],
+    ["Pg-Dn", Keycode.PAGE_DOWN, 0xf782ff, 15, 13],
+    ["Left", Keycode.LEFT_ARROW, 0x00aaff, 4, 12],
+    ["Down", Keycode.DOWN_ARROW, 0x00aaff, 3, 5],
+    ["Right", Keycode.RIGHT_ARROW, 0x00aaff, 5, 4]
 ]
 
 dev_sprites = sprite_sheet(display, 
                     "boncekeeb/tiles/dev_tiles.bmp", 
-                    16, 16, dev_sprite_names)
+                    16, 16, dev_sprite_details)
+i = 0
+while i <= len(dev_sprite_details) -1:
+    for y in range (0, 4):
+        for x in range (0, 5):
+            dev_sprites.sprite[x,y] = dev_sprite_details[i][3]
+            i+= 1
+dev_sprites.group.append(dev_sprites.sprite)
+dev_sprites.display.show(dev_sprites.group)
+
+def map_buttons_to_sprites(pixel_count, pixels, sprite_details, sprites):
+    print(pixel_count)
+    for i in range(0, pixel_count-1):
+        selected_pixel = None
+        sprite_detail = None
+        for sprite in sprite_details:
+            if sprite[3] == i:
+                sprite_detail = sprite
+                selected_color = sprite_detail[2]
+                selected_pixel = sprite_detail[4]
+                pixels.show_pixel(selected_pixel, selected_color)
 
 
 # == front buttons setup == #
@@ -64,13 +89,16 @@ keys = [["1", "2", "3", "4", "5"],
         ["16", "17", "18", "19", "20"]]
 keypad = keypads(cols, rows, keys)
 
-# == neopixels setup == #
-pixels = pretty_pixels(board.GP0, 20, 3, 0.5, False, None)
 
-for n in range(1,2):
-    pixels.rainbow_cycle(0)
+# == neopixels setup == #
+pixel_count = 20
+pixels = pretty_pixels(board.GP0, pixel_count, 3, 0.5, False, None)
+
+# for n in range(1,2):
+#     pixels.rainbow_cycle(0)
 #pixels.clear_pixels()
 wipe_cycle = time.monotonic() +2
+
 
 def key_to_pixel(key_index):
     if key_index == 5:
@@ -114,7 +142,12 @@ def key_to_pixel(key_index):
     elif key_index == 16:
         return 20
 
-esc_sprite = dev_sprites.get_sprite_by_name("Esc")
+map_buttons_to_sprites(20, pixels, dev_sprite_details, dev_sprites)
+# while True:
+#     pixels.show_pixel(17, 0xff0000)
+#     time.sleep(.5)
+#     pixels.show_pixel(17, 0x000000)
+#     time.sleep(.5)
 
 
 while True:

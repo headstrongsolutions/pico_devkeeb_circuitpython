@@ -55,24 +55,39 @@ class sprite_sheet:
         self.sprite = displayio.TileGrid(
                             self.sprite_sheet, 
                             pixel_shader=self.palette,
-                            width = 1,
-                            height = 1,
-                            tile_width = self.width,
-                            tile_height = self.height)
+                            width = 5,
+                            height = 4,
+                            tile_width = 16,
+                            tile_height = 16)
         self.group = displayio.Group(scale=1)
         
+
+
         # Create a Group to hold the sprite
         self.group = displayio.Group(scale=1)
 
         # Add the sprite to the Group
-        self.group.append(self.sprite)
+        #self.group.append(self.sprite)
 
         # Add the Group to the Display
         self.display.show(self.group)
 
         # Set sprite location
-        self.group.x = 120
-        self.group.y = 80
+        self.group.x = 48
+        self.group.y = 0
+
+
+    def create_sprites(self, count, sprite_group):
+        for sprite in range(0, count):
+            sprite = displayio.TileGrid(
+                            self.sprite_sheet, 
+                            pixel_shader=self.palette,
+                            width = 1,
+                            height = 1,
+                            tile_width = self.width,
+                            tile_height = self.height)
+            self.group.append(sprite)
+            
 
     def test_sprites(self):
         self.display.show(self.group)
@@ -82,10 +97,13 @@ class sprite_sheet:
         while True:
             self.sprite[0] = source_index % 6
             source_index += 1
+    
+    def show_sprite(self, index, tile_index, x, y):
+        self.display.show(self.group)
+        self.group.x = x
+        self.group.y = y
+        self.sprite[index] = tile_index 
 
     def get_sprite_by_name(self, search_sprite_name):
-        for sprite_name in self.sprite_names:
-            if sprite_name[0] == search_sprite_name:
-                return True
-                # self.group.append(self.sprite[sprite_name[2]])
-                #self.display.show(self.group)
+        sprite_index = [s for s in self.sprite_names if s[0] == "Sh-F5"][0][2]
+        return self.sprite[sprite_index]
