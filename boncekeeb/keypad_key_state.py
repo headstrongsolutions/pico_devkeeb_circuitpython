@@ -1,7 +1,7 @@
 import time 
 
 class keypad_key_state:
-    def __init__(self, key_index:int, state=False, timeout_delay=1):
+    def __init__(self, key_index:int, state=False, timeout_delay=.1):
         self.key_index = key_index
         self.state = state
         self.repeating = False
