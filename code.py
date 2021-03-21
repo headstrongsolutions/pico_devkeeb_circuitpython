@@ -4,6 +4,7 @@ import displayio
 import usb_hid
 from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keycode import Keycode
+from adafruit_hid.keyboard_layout_us import KeyboardLayoutUS
 
 from boncekeeb.ssd_1306s import ssd_1306s
 from boncekeeb.pretty_pixels import pretty_pixels
@@ -122,7 +123,7 @@ def get_key_pixel_map(key: int, pixel: int) -> int:
     if pixel:
         return [key_pixel for key_pixel in key_pixel_map if key_pixel[1] == key][0][0]
 
-def get_key_for_index(index: int):
+def get_key_codes_for_index(index: int):
     key = None
     try:
         key = [key_sprite for key_sprite in dev_sprite_details if key_sprite[3] == index][0][1]
@@ -139,6 +140,10 @@ def get_colour(colour_name: str) -> int:
 map_buttons_to_sprites(20, pixels, dev_sprite_details, dev_sprites)
 setup_dev_tiles()
 
+time.sleep(.25)  # Sleep for a bit to avoid a race condition on some systems
+keyboard = Keyboard(usb_hid.devices)
+keyboard_layout = KeyboardLayoutUS(keyboard)
+
 # ====== Main Process ====== #
 
 ## Example simple one liners
@@ -150,14 +155,15 @@ while True:
     keypad.pressed_keys()
     for key in keypad.get_states():
         if key.triggering() is True:
-            print(key.key_index)
-            dave = get_key_pixel_map(key.key_index, None)
-            print(dave)
-            keything = str(get_key_for_index(dave))
-            print(keything)
-            pixel_index = get_key_pixel_map(key.key_index, None)
-            if pixel_index:
-                pixels.show_pixel(pixel_index, get_colour(selected_color))
+            key_codes = get_key_codes_for_index(
+                get_key_pixel_map(key.key_index, None))
+            if key_codes:
+                keyboard.press(key_codes)
+                keyboard.release_all()
+
+            # pixel_index = get_key_pixel_map(key.key_index, None)
+            # if pixel_index:
+            #     pixels.show_pixel(pixel_index, get_colour(selected_color))
         # else:
         #     # TODO - fix key release
         #     #key.release()
