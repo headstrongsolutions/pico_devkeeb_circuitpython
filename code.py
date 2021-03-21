@@ -30,7 +30,7 @@ dev_sprite_details = [
     ["F10", Keycode.F10, 0x00ccff, 10, 7],
     ["F11", Keycode.F11, 0x4374b5, 11, 2],
 
-    ["Tilde", [Keycode.SHIFT, Keycode.GRAVE_ACCENT], 0x6af011, 17, 19],
+    ["GrvA", [Keycode.SHIFT, Keycode.GRAVE_ACCENT], 0x6af011, 17, 19],
     ["Pg-Up", Keycode.PAGE_UP, 0xf782ff, 7, 14],
     ["empty", None, 0x000000, 14, 11],
     ["Up", Keycode.UP_ARROW, 0x00aaff, 2, 6],
@@ -126,7 +126,7 @@ def get_key_pixel_map(key: int, pixel: int) -> int:
 def get_key_codes_for_index(index: int):
     key = None
     try:
-        key = [key_sprite for key_sprite in dev_sprite_details if key_sprite[3] == index][0][1]
+        key = [key_sprite for key_sprite in dev_sprite_details if key_sprite[4] == index][0][1]
     except IndexError:
         key = None
         # TODO: Tidy up no key at index
@@ -158,9 +158,12 @@ while True:
             key_codes = get_key_codes_for_index(
                 get_key_pixel_map(key.key_index, None))
             if key_codes:
-                keyboard.press(key_codes)
+                if isinstance(key_codes, list):
+                    keyboard.press(key_codes[0], key_codes[1])
+                elif isinstance(key_codes, int):
+                    keyboard.press(key_codes)
                 keyboard.release_all()
-
+       
             # pixel_index = get_key_pixel_map(key.key_index, None)
             # if pixel_index:
             #     pixels.show_pixel(pixel_index, get_colour(selected_color))
@@ -168,8 +171,8 @@ while True:
         #     # TODO - fix key release
         #     #key.release()
             
-    front_buttons_pressed = front_buttons.test_buttons()
-    if len(front_buttons_pressed) > 0:
-        if selected_color != front_buttons_pressed[0]: 
-            selected_color = front_buttons_pressed[0]
-            display.test_text(front_buttons_pressed)
+    # front_buttons_pressed = front_buttons.test_buttons()
+    # if len(front_buttons_pressed) > 0:
+    #     if selected_color != front_buttons_pressed[0]: 
+    #         selected_color = front_buttons_pressed[0]
+    #         display.test_text(front_buttons_pressed)
