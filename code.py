@@ -45,12 +45,10 @@ dev_sprite_details = [
 dev_sprites = sprite_sheet(display, 
                     "boncekeeb/tiles/dev_tiles.bmp", 
                     16, 16, dev_sprite_details)
-i = 0
-while i <= len(dev_sprite_details) -1:
+for i in range(0, len(dev_sprite_details) -1): 
     for y in range (0, 4):
         for x in range (0, 5):
             dev_sprites.sprite[x,y] = dev_sprite_details[i][3]
-            i+= 1
 dev_sprites.group.append(dev_sprites.sprite)
 dev_sprites.display.show(dev_sprites.group)
 
