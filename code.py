@@ -12,10 +12,10 @@ from boncekeeb.front_buttons import front_buttons
 from boncekeeb.sprites import sprite_sheet 
 
 
-# == screen setup == #
+# ====== Screen Setup ====== #
 display = ssd_1306s(board.GP2, board.GP3, 128, 64)
 
-# == spritesheets setup == #
+# ====== Spritesheets Setup ====== #
 dev_sprite_details = [
     ["Esc", Keycode.ESCAPE, 0xff0000, 0, 17],
     ["Sh-Del", [Keycode.SHIFT, Keycode.DELETE], 0xff0000, 16, 16],
@@ -52,6 +52,29 @@ for i in range(0, len(dev_sprite_details) -1):
 dev_sprites.group.append(dev_sprites.sprite)
 dev_sprites.display.show(dev_sprites.group)
 
+# ====== Front Buttons Setup ====== #
+names_and_pins = [ ["Blue", board.GP21, 0x0000ff],
+                   ["Green", board.GP20, 0x00ff00],
+                   ["Red", board.GP19, 0xff0000],
+                   ["Yellow", board.GP18, 0xffff00] ]
+front_buttons = front_buttons(names_and_pins)
+selected_color = "Red"
+
+# ====== Keyboard Setup ====== #
+cols = (board.GP13, board.GP12, board.GP11, board.GP10, board.GP9)
+rows = (board.GP22, board.GP26, board.GP27, board.GP28)
+keys = [["1", "2", "3", "4", "5"],
+        ["6", "7", "8", "9", "10"],
+        ["11", "12", "13", "14", "15"],
+        ["16", "17", "18", "19", "20"]]
+keypad = keypads(cols, rows, keys)
+
+# ====== Neopixels Setup ====== #
+pixel_count = 20
+pixels = pretty_pixels(board.GP0, pixel_count, 3, 0.5, False, None)
+
+# ====== Helper Functions ====== #
+
 def map_buttons_to_sprites(pixel_count, pixels, sprite_details, sprites):
     print(pixel_count)
     for i in range(0, pixel_count-1):
@@ -63,35 +86,6 @@ def map_buttons_to_sprites(pixel_count, pixels, sprite_details, sprites):
                 selected_color = sprite_detail[2]
                 selected_pixel = sprite_detail[4]
                 pixels.show_pixel(selected_pixel, selected_color)
-
-
-# == front buttons setup == #
-names_and_pins = [ ["Blue", board.GP21, 0x0000ff],
-                   ["Green", board.GP20, 0x00ff00],
-                   ["Red", board.GP19, 0xff0000],
-                   ["Yellow", board.GP18, 0xffff00] ]
-front_buttons = front_buttons(names_and_pins)
-selected_color = "Red"
-
-def get_colour(colour_name):
-    button = [button for button in names_and_pins if button[0] == colour_name]
-    return button[0][2]
-
-
-# == keyboard setup == #
-cols = (board.GP13, board.GP12, board.GP11, board.GP10, board.GP9)
-rows = (board.GP22, board.GP26, board.GP27, board.GP28)
-keys = [["1", "2", "3", "4", "5"],
-        ["6", "7", "8", "9", "10"],
-        ["11", "12", "13", "14", "15"],
-        ["16", "17", "18", "19", "20"]]
-keypad = keypads(cols, rows, keys)
-
-
-# == neopixels setup == #
-pixel_count = 20
-pixels = pretty_pixels(board.GP0, pixel_count, 3, 0.5, False, None)
-
 
 def pretty_cycle():
     for n in range(1,2):
@@ -119,6 +113,11 @@ def get_key_pixel_map(key: int, pixel: int) -> int:
     if pixel:
         return [key_pixel for key_pixel in key_pixel_map if key_pixel[1] == key][0][0]
 
+def get_colour(colour_name: str) -> int:
+    button = [button for button in names_and_pins if button[0] == colour_name]
+    return button[0][2]
+
+# ====== Main Process ====== #
 
 pretty_cycle()
 map_buttons_to_sprites(20, pixels, dev_sprite_details, dev_sprites)
@@ -140,4 +139,3 @@ while True:
         if selected_color != front_buttons_pressed[0]: 
             selected_color = front_buttons_pressed[0]
             display.test_text(front_buttons_pressed)
-
