@@ -43,14 +43,8 @@ dev_sprite_details = [
 ]
 
 dev_sprites = sprite_sheet(display, 
-                    "boncekeeb/tiles/dev_tiles.bmp", 
-                    16, 16, dev_sprite_details)
-for i in range(0, len(dev_sprite_details) -1): 
-    for y in range (0, 4):
-        for x in range (0, 5):
-            dev_sprites.sprite[x,y] = dev_sprite_details[i][3]
-dev_sprites.group.append(dev_sprites.sprite)
-dev_sprites.display.show(dev_sprites.group)
+                        "boncekeeb/tiles/dev_tiles.bmp", 
+                        16, 16, dev_sprite_details)
 
 # ====== Front Buttons Setup ====== #
 names_and_pins = [ ["Blue", board.GP21, 0x0000ff],
@@ -75,8 +69,24 @@ pixels = pretty_pixels(board.GP0, pixel_count, 3, 0.5, False, None)
 
 # ====== Helper Functions ====== #
 
-def map_buttons_to_sprites(pixel_count, pixels, sprite_details, sprites):
-    print(pixel_count)
+def show_dev_tiles():
+    i = 0
+    # Starting from 0
+    # .for each row
+    for y in range (0, 4):
+        # ..and each column
+        for x in range (0, 5):
+            # ...create a new indexed sprite
+            dev_sprites.sprite[x,y] = dev_sprite_details[i][3]
+            if i < len(dev_sprite_details) -1:
+                # ....and increase the sprite index counter
+                i +=1
+    # .and now a group to bind them
+    dev_sprites.group.append(dev_sprites.sprite)
+    # :) show the sprites!
+    dev_sprites.display.show(dev_sprites.group)
+
+def map_buttons_to_sprites(pixel_count: int, pixels, sprite_details, sprites):
     for i in range(0, pixel_count-1):
         selected_pixel = None
         sprite_detail = None
@@ -121,6 +131,7 @@ def get_colour(colour_name: str) -> int:
 
 pretty_cycle()
 map_buttons_to_sprites(20, pixels, dev_sprite_details, dev_sprites)
+show_dev_tiles()
 
 while True:
     keypad.pressed_keys()
