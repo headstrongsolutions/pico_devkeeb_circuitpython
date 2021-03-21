@@ -94,87 +94,52 @@ keypad = keypads(cols, rows, keys)
 pixel_count = 20
 pixels = pretty_pixels(board.GP0, pixel_count, 3, 0.5, False, None)
 
-# for n in range(1,2):
-#     pixels.rainbow_cycle(0)
-#pixels.clear_pixels()
-wipe_cycle = time.monotonic() +2
+
+def pretty_cycle():
+    for n in range(1,2):
+        display.test_text("Pretty Cycle: %d" % n)
+        pixels.rainbow_cycle(0)
+    pixels.clear_pixels()
+
+def get_key_pixel_map(key: int, pixel: int) -> int:
+    # array of arrays containing [keyboard_key_index, neopixel_index]
+    key_pixel_map = [
+        [5, 1], [10, 2], [15, 3], [20, 4], [19, 5], [14, 6],
+        [9, 7], [4, 8], [3, 9], [8, 10], [13,11], [18,12],
+        [17,13], [12,14], [7,15], [2,16], [1,17], [6,18],
+        [11,19], [16,20]
+    ]
+    # Double check that someone hasn't asked with both key and pixel indexes
+    if key and pixel:
+        return None
+        
+    # Return pixel index from key index
+    if key:
+        return [key_pixel for key_pixel in key_pixel_map if key_pixel[0] == key][0][1]
+    
+    # Return key index from pixel index
+    if pixel:
+        return [key_pixel for key_pixel in key_pixel_map if key_pixel[1] == key][0][0]
 
 
-def key_to_pixel(key_index):
-    if key_index == 5:
-        return 1
-    elif key_index == 10:
-        return 2
-    elif key_index == 15:
-        return 3
-    elif key_index == 20:
-        return 4
-    elif key_index == 19:
-        return 5
-    elif key_index == 14:
-        return 6
-    elif key_index == 9:
-        return 7
-    elif key_index == 4:
-        return 8
-    elif key_index == 3:
-        return 9
-    elif key_index == 8:
-        return 10
-    elif key_index == 13:
-        return 11
-    elif key_index == 18:
-        return 12
-    elif key_index == 17:
-        return 13
-    elif key_index == 12:
-        return 14
-    elif key_index == 7:
-        return 15
-    elif key_index == 2:
-        return 16
-    elif key_index == 1:
-        return 17
-    elif key_index == 6:
-        return 18
-    elif key_index == 11:
-        return 19
-    elif key_index == 16:
-        return 20
-
+pretty_cycle()
 map_buttons_to_sprites(20, pixels, dev_sprite_details, dev_sprites)
-# while True:
-#     pixels.show_pixel(17, 0xff0000)
-#     time.sleep(.5)
-#     pixels.show_pixel(17, 0x000000)
-#     time.sleep(.5)
-
 
 while True:
     keypad.pressed_keys()
     for key in keypad.get_states():
         if key.triggering() is True:
             print(key.key_index)
-            pixel_index = key_to_pixel(key.key_index)
+            pixel_index = get_key_pixel_map(key.key_index, None)
             if pixel_index:
                 pixels.show_pixel(pixel_index, get_colour(selected_color))
         # else:
         #     # TODO - fix key release
         #     #key.release()
             
-    # TODO - make pixel states independant so they 
-    # can hide themselves or reset back to the 
-    # original set colour
-    if time.monotonic() >= wipe_cycle:
-        #pixels.clear_pixels()
-        wipe_cycle = time.monotonic() +2
-    
     front_buttons_pressed = front_buttons.test_buttons()
     if len(front_buttons_pressed) > 0:
         if selected_color != front_buttons_pressed[0]: 
             selected_color = front_buttons_pressed[0]
             display.test_text(front_buttons_pressed)
 
-
-    #time.sleep(0.1)
-    
