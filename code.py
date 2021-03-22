@@ -20,23 +20,23 @@ display = ssd_1306s(board.GP2, board.GP3, 128, 64)
 dev_sprite_details = [
     ["Esc", Keycode.ESCAPE, 0xff0000, 0, 17],
     ["Sh-Del", [Keycode.SHIFT, Keycode.DELETE], 0xff0000, 16, 16],
-    ["empty", None, 0x000000, 14, 9],
+    ["F9", Keycode.F9, 0xed1351, 12, 9],
     ["F5", Keycode.F5, 0x00ff6e, 8, 8],
     ["Sh-F5", [Keycode.SHIFT, Keycode.F5], 0xff0000, 9, 1],
 
-    ["Home", Keycode.HOME, 0x6af011, 1, 18],
-    ["End", Keycode.END, 0xf782ff, 6, 15],
-    ["F9", Keycode.F9, 0xed1351, 12, 10],
+    ["empty", None, 0x000000, 14, 18],
+    ["empty", None, 0x000000, 14, 15],
+    ["F12", Keycode.F12, 0x00ccff, 13, 10],
     ["F10", Keycode.F10, 0x00ccff, 10, 7],
     ["F11", Keycode.F11, 0x4374b5, 11, 2],
 
-    ["GrvA", [Keycode.SHIFT, Keycode.GRAVE_ACCENT], 0x6af011, 17, 19],
+    ["empty", None, 0x000000, 14, 19],
     ["Pg-Up", Keycode.PAGE_UP, 0xf782ff, 7, 14],
-    ["empty", None, 0x000000, 14, 11],
+    ["Home", Keycode.HOME, 0x6af011, 1, 11],
     ["Up", Keycode.UP_ARROW, 0x00aaff, 2, 6],
-    ["empty", None, 0x000000, 14, 3],
+    ["End", Keycode.END, 0xf782ff, 6, 3],
 
-    ["F12", Keycode.F12, 0x00ccff, 13, 20],
+    ["empty", None, 0x000000, 14, 20],
     ["Pg-Dn", Keycode.PAGE_DOWN, 0xf782ff, 15, 13],
     ["Left", Keycode.LEFT_ARROW, 0x00aaff, 4, 12],
     ["Down", Keycode.DOWN_ARROW, 0x00aaff, 3, 5],
@@ -124,7 +124,6 @@ def get_key_pixel_map(key: int, pixel: int) -> int:
         return [key_pixel for key_pixel in key_pixel_map if key_pixel[1] == key][0][0]
 
 def get_key_codes_for_index(index: int):
-    key = None
     try:
         key = [key_sprite for key_sprite in dev_sprite_details if key_sprite[4] == index][0][1]
     except IndexError:
