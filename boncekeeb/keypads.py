@@ -29,16 +29,8 @@ class keypads:
             for temp_key_index in temp_key_states:
                 if int(temp_key_index) == key.key_index:
                     key.press()
-                    
                 else:
                     key.release()
-
-        # for key_index in temp_key_states:
-        #     for key_state in self.key_states:
-        #         if int(key_index) == key_state.key_index:
-        #             key_state.press()
-        #         else:
-        #             key_state.release() 
     
     def get_states(self):
         return self.key_states
